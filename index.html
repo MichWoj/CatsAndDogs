@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Animal Gallery - Home</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="page-title">
+          <span class="letter-1">A</span><span class="letter-2">n</span
+          ><span class="letter-3">i</span><span class="letter-4">m</span
+          ><span class="letter-5">a</span><span class="letter-6">l</span
+          ><span class="letter-7"> </span><span class="letter-8">G</span
+          ><span class="letter-9">a</span><span class="letter-10">l</span
+          ><span class="letter-11">l</span><span class="letter-12">e</span
+          ><span class="letter-13">r</span><span class="letter-14">y</span>
+        </h1>
+        <a href="page2.html" class="nav-button">View Dog Collection</a>
+      </div>
+
+      <div class="content-frame">
+        <div class="photo-grid">
+          <div id="result1" class="loading">Loading cats...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for photo details -->
+    <div id="photoModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="modalImage" src="" alt="" />
+        <div id="modalInfo"></div>
+      </div>
+    </div>
+
+    <script>
+      // Modal functionality
+      const modal = document.getElementById('photoModal');
+      const modalImg = document.getElementById('modalImage');
+      const modalInfo = document.getElementById('modalInfo');
+      const closeBtn = document.getElementsByClassName('close')[0];
+
+      function openModal(imgSrc, info, type) {
+        modal.style.display = 'block';
+        modalImg.src = imgSrc;
+        modalInfo.innerHTML = `
+          <h3>${type}</h3>
+          <p>ID: ${info}</p>
+        `;
+      }
+
+      closeBtn.onclick = function () {
+        modal.style.display = 'none';
+      };
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      };
+
+      // Fetch cats
+      fetch('https://api.thecatapi.com/v1/images/search?limit=6')
+        .then((response) => response.json())
+        .then((data) => {
+          let output = '';
+          data.forEach(function (image) {
+            output += `
+              <div class="photo-card" onclick="openModal('${image.url}', '${image.id}', 'Cat')">
+                <img src="${image.url}" alt="Cat">
+                <div class="photo-info">
+                  <div class="photo-type">Cat</div>
+                </div>
+              </div>
+            `;
+          });
+          document.getElementById('result1').innerHTML = output;
+        })
+        .catch((error) => {
+          document.getElementById('result1').innerHTML =
+            '<div class="loading">Failed to load cats</div>';
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animal Gallery - Dog Collection</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="page-title">
+          <span class="letter-1">D</span><span class="letter-2">o</span
+          ><span class="letter-3">g</span><span class="letter-4"> </span
+          ><span class="letter-5">C</span><span class="letter-6">o</span
+          ><span class="letter-7">l</span><span class="letter-8">l</span
+          ><span class="letter-9">e</span><span class="letter-10">c</span
+          ><span class="letter-11">t</span><span class="letter-12">i</span
+          ><span class="letter-13">o</span><span class="letter-14">n</span>
+        </h1>
+        <a href="index.html" class="nav-button">Back to Cats</a>
+      </div>
+
+      <div class="content-frame">
+        <div class="photo-grid" id="fajnePieski">
+          <div class="loading">Loading dog collection...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for photo details -->
+    <div id="photoModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="modalImage" src="" alt="" />
+        <div id="modalInfo"></div>
+      </div>
+    </div>
+
+    <script>
+      // Modal functionality
+      const modal = document.getElementById('photoModal');
+      const modalImg = document.getElementById('modalImage');
+      const modalInfo = document.getElementById('modalInfo');
+      const closeBtn = document.getElementsByClassName('close')[0];
+
+      function openModal(imgSrc, info) {
+        modal.style.display = 'block';
+        modalImg.src = imgSrc;
+        modalInfo.innerHTML = `
+        <h3>Dog Details</h3>
+        <p>ID: ${info}</p>
+        <p>Click outside to close</p>
+      `;
+      }
+
+      closeBtn.onclick = function () {
+        modal.style.display = 'none';
+      };
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      };
+
+      // Fetch dog collection
+      fetch('https://api.thedogapi.com/v1/images/search?limit=10')
+        .then((response) => response.json())
+        .then((objectData) => {
+          let output = '';
+          for (let i = 0; i < objectData.length; i++) {
+            output += `
+            <div class="photo-card" onclick="openModal('${
+              objectData[i].url
+            }', '${objectData[i].id}')">
+              <img src="${objectData[i].url}" alt="Dog ${i + 1}">
+              <div class="photo-info">
+                <div class="photo-type">Dog #${i + 1}</div>
+              </div>
+            </div>
+          `;
+          }
+          document.getElementById('fajnePieski').innerHTML = output;
+        })
+        .catch((error) => {
+          document.getElementById('fajnePieski').innerHTML =
+            '<div class="loading">Failed to load dog collection</div>';
+        });
+    </script>
+  </body>
+</html>

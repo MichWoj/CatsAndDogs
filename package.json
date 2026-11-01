@@ -1,0 +1,13 @@
+{
+  "name": "animal-api-project",
+  "version": "1.0.0",
+  "description": "A simple project that displays animal images from various APIs",
+  "main": "script.js",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": ["animals", "api", "cats", "dogs"],
+  "author": "",
+  "license": "ISC"
+}
